@@ -29,8 +29,7 @@ PKG_USE_MIPS16:=0
 PYTHON3_PKG_BUILD:=0
 
 PKG_BUILD_DEPENDS:= \
-  	+PACKAGE_opencv-python:python3/host \
-  	+PACKAGE_opencv-python:python3-dev
+  	+OPENCV_PYTHON:python3/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -45,6 +44,10 @@ define Package/opencv/Default/description
  and modify the code.
 endef
 
+define Package/opencv/config
+  source "$(SOURCE)/Config.in"
+endef
+
 define Package/opencv/default
   SECTION:=libs
   CATEGORY:=Libraries
@@ -52,78 +55,30 @@ define Package/opencv/default
   URL:=https://opencv.org/
   DEPENDS:= \
   	+libpthread +librt +libatomic +libstdcpp +zlib +libjpeg +libwebp \
-  	+PACKAGE_opencv-ffmpeg:ffmpeg \
-  	+PACKAGE_opencv-ffmpeg:bzip2 \
-  	+PACKAGE_opencv-ffmpeg:libffmpeg-full \
-  	+PACKAGE_opencv-jpeg:libjpeg \
-  	+PACKAGE_opencv-python:python3-numpy \
-  	+PACKAGE_opencv-python:python3-numpy-src \
-  	+PACKAGE_opencv-v4l:libv4l \
-  	+PACKAGE_opencv-v4l:libv4l \
-  	+PACKAGE_opencv-tiff:libtiff \
-  	+PACKAGE_opencv-png:libpng \
-  	+PACKAGE_opencv-gstreamer:gstreamer1
+  	+OPENCV_FFMPEG:ffmpeg \
+  	+OPENCV_FFMPEG:bzip2 \
+  	+OPENCV_FFMPEG:libffmpeg-full \
+  	+OPENCV_JPEG:libjpeg \
+  	+OPENCV_PYTHON:python3-numpy \
+  	+OPENCV_PYTHON:python3-numpy-src \
+  	+OPENCV_V4L:libv4l \
+  	+OPENCV_V4L:libv4l \
+  	+OPENCV_TIFF:libtiff \
+  	+OPENCV_PNG:libpng \
+  	+OPENCV_GSTREAMER:gstreamer1
 endef
 
 define Package/opencv
 	$(call Package/opencv/default)
 endef
 
-define Package/opencv-ffmpeg
-	$(call Package/opencv/default)
-	DEPENDS+=+opencv
-	TITLE+= with ffmpeg
-endef
-
-define Package/opencv-jpeg
-	$(call Package/opencv/default)
-	DEPENDS+=opencv
-	TITLE+= with jpeg
-endef
-
-define Package/opencv-python
-	$(call Package/opencv/default)
-	DEPENDS+=+opencv
-	TITLE+= with python bindings
-endef
-
-define Package/opencv-v4l
-	$(call Package/opencv/default)
-	DEPENDS+=+opencv
-	TITLE+= with v4l
-endef
-
-define Package/opencv-tiff
-	$(call Package/opencv/default)
-	DEPENDS+=+opencv
-	TITLE+= with tiff 
-endef
-
-define Package/opencv-png
-	$(call Package/opencv/default)
-	DEPENDS+=+opencv
-	TITLE+= with png
-endef
-
-define Package/opencv-gstreamer
-	$(call Package/opencv/default)
-	DEPENDS+=+opencv
-	TITLE+= with gstreamer
-endef
-
-define Package/opencv-protobuf
-	$(call Package/opencv/default)
-	DEPENDS+=+opencv
-	TITLE+= with protobuf
-endef
-
-ifeq ($(CONFIG_PACKAGE_opencv-ffmpeg),y)
+ifeq ($(CONFIG_OPENCV_FFMPEG),y)
 	CMAKE_OPTIONS += -DWITH_FFMPEG=ON
 else
 	CMAKE_OPTIONS += -DWITH_FFMPEG=OFF
 endif
 
-ifeq ($(CONFIG_PACKAGE_opencv-jpeg),y)
+ifeq ($(CONFIG_OPENCV_JPEG),y)
 	CMAKE_OPTIONS += \
 		-DWITH_JPEG=ON \
 		-DBUILD_OPENJPEG=ON \
@@ -135,7 +90,7 @@ else
 		-DBUILD_JPEG=OFF
 endif
 
-ifeq ($(CONFIG_PACKAGE_opencv-python),y)
+ifeq ($(CONFIG_OPENCV_PYTHON),y)
 	CMAKE_OPTIONS += \
 	-DBUILD_opencv_python2=OFF \
 	-DBUILD_opencv_python3=ON \
@@ -149,7 +104,7 @@ else
 	-DBUILD_opencv_python3=OFF
 endif
 
-ifeq ($(CONFIG_PACKAGE_opencv-v4l),y)
+ifeq ($(CONFIG_OPENCV_V4L),y)
 	CMAKE_OPTIONS += \
 		-DWITH_LIBV4L=ON \
 		-DWITH_v4L=ON
@@ -159,7 +114,7 @@ else
 		-DWITH_v4L=OFF
 endif
 
-ifeq ($(CONFIG_PACKAGE_opencv-tiff),y)
+ifeq ($(CONFIG_OPENCV_TIFF),y)
 	CMAKE_OPTIONS += \
 		-DWITH_TIFF=ON
 else
@@ -167,7 +122,7 @@ else
 		-DWITH_TIFF=OFF
 endif
 
-ifeq ($(CONFIG_PACKAGE_opencv-png),y)
+ifeq ($(CONFIG_OPENCV_PNG),y)
 	CMAKE_OPTIONS += \
 		-DWITH_PNG=ON
 else
@@ -175,7 +130,7 @@ else
 		-DWITH_PNG=OFF
 endif
 
-ifeq ($(CONFIG_PACKAGE_opencv-gstreamer),y)
+ifeq ($(CONFIG_OPENCV_GSTREAMER),y)
 	CMAKE_OPTIONS += \
 		-DWITH_GSTREAMER=ON
 else
@@ -183,7 +138,7 @@ else
 		-DWITH_GSTREAMER=OFF
 endif
 
-ifeq ($(CONFIG_PACKAGE_opencv-protobuf),y)
+ifeq ($(CONFIG_OPENCV_PROTOBUF),y)
 	CMAKE_OPTIONS += \
 		-DBUILD_PROTOBUF=ON \
 		-DWITH_PROTOBUF=ON
@@ -343,29 +298,13 @@ TARGET_LDFLAGS += -latomic
 define Package/opencv/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libopencv* $(1)/usr/lib/
-endef
 
-define Package/opencv-python/install
+ifeq ($(CONFIG_OPENCV_PYTHON),y)
 	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)
 	cp -r  $(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR)/cv2 $(1)$(PYTHON3_PKG_DIR)/cv2
 	mv $(1)$(PYTHON3_PKG_DIR)/cv2/python-$(PYTHON3_VERSION)/cv2.cpython-*.so \
 		$(1)$(PYTHON3_PKG_DIR)/cv2/python-$(PYTHON3_VERSION)/cv2.cpython-$(PYTHON3_VERSION).so
+endif
 endef
 
-Package/opencv-ffmpeg/install = $(Package/opencv/install)
-Package/opencv-jpeg/install = $(Package/opencv/install)
-Package/opencv-v4l/install = $(Package/opencv/install)
-Package/opencv-tiff/install = $(Package/opencv/install)
-Package/opencv-png/install = $(Package/opencv/install)
-Package/opencv-gstreamer/install = $(Package/opencv/install)
-Package/opencv-protobuf/install = $(Package/opencv/install)
-
 $(eval $(call BuildPackage,opencv))
-$(eval $(call BuildPackage,opencv-ffmpeg))
-$(eval $(call BuildPackage,opencv-jpeg))
-$(eval $(call BuildPackage,opencv-python))
-$(eval $(call BuildPackage,opencv-v4l))
-$(eval $(call BuildPackage,opencv-tiff))
-$(eval $(call BuildPackage,opencv-png))
-$(eval $(call BuildPackage,opencv-gstreamer))
-$(eval $(call BuildPackage,opencv-protobuf))

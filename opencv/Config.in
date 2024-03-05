@@ -1,0 +1,52 @@
+menu "Configuration"
+        depends on PACKAGE_opencv
+
+config OPENCV_FFMPEG
+	bool "FFmpeg support"
+	default n
+	help
+      Select this to add support for ffmpeg.
+
+config OPENCV_JPEG
+	bool "JPEG support"
+	default n
+	help
+      Select this to add support for JPEG.
+
+config OPENCV_PYTHON
+	bool "Python bindings"
+	default n
+	help
+      Select this to add support for Python bindings
+
+config OPENCV_V4L
+	bool "V4L support"
+	default n
+	help
+      Select this to add support for V4L
+
+config OPENCV_TIFF
+	bool "TIFF support"
+	default n
+	help
+      Select this to add support for TIFF
+
+config OPENCV_PNG
+	bool "PNG support"
+	default n
+	help
+      Select this to add support for PNG
+
+config OPENCV_GSTREAMER
+	bool "Gstreamer support"
+	default n
+	help
+      Select this to add support for Gstreamer
+
+config OPENCV_PROTOBUF
+	bool "PROTOBUF support"
+	default n
+	help
+      Select this to add support for Protobuf
+
+endmenu
