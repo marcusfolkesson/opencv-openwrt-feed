@@ -65,7 +65,8 @@ define Package/opencv/default
   	+OPENCV_V4L:libv4l \
   	+OPENCV_TIFF:libtiff \
   	+OPENCV_PNG:libpng \
-  	+OPENCV_GSTREAMER:gstreamer1
+  	+OPENCV_GSTREAMER:gstreamer1 \
+  	+OPENCV_GSTREAMER:gstreamer1-libs
 endef
 
 define Package/opencv
