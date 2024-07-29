@@ -28,8 +28,7 @@ PKG_USE_MIPS16:=0
 # but we are not a python package, so set PYTHON3_PKG_BUILD.
 PYTHON3_PKG_BUILD:=0
 
-PKG_BUILD_DEPENDS:= \
-  	+OPENCV_PYTHON:python3/host
+PKG_BUILD_DEPENDS:= +CONFIG_OPENCV_PYTHON:python3/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -53,20 +52,7 @@ define Package/opencv/default
   CATEGORY:=Libraries
   TITLE:=OpenCV
   URL:=https://opencv.org/
-  DEPENDS:= \
-  	+libpthread +librt +libatomic +libstdcpp +zlib +libjpeg +libwebp \
-  	+OPENCV_FFMPEG:ffmpeg \
-  	+OPENCV_FFMPEG:bzip2 \
-  	+OPENCV_FFMPEG:libffmpeg-full \
-  	+OPENCV_JPEG:libjpeg \
-  	+OPENCV_PYTHON:python3-numpy \
-  	+OPENCV_PYTHON:python3-numpy-src \
-  	+OPENCV_V4L:libv4l \
-  	+OPENCV_V4L:libv4l \
-  	+OPENCV_TIFF:libtiff \
-  	+OPENCV_PNG:libpng \
-  	+OPENCV_GSTREAMER:gstreamer1 \
-  	+OPENCV_GSTREAMER:gstreamer1-libs
+  DEPENDS:= +libpthread +librt +libatomic +libstdcpp +zlib +libjpeg +libwebp
 endef
 
 define Package/opencv

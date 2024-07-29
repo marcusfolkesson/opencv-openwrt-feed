@@ -3,42 +3,53 @@ menu "Configuration"
 
 config OPENCV_FFMPEG
 	bool "FFmpeg support"
+	select PACKAGE_bzip2
+	select PACKAGE_ffmpeg
+	select PACKAGE_libffmpeg-full
 	default n
 	help
       Select this to add support for ffmpeg.
 
 config OPENCV_JPEG
 	bool "JPEG support"
+	select PACKAGE_libjpeg
 	default n
 	help
       Select this to add support for JPEG.
 
 config OPENCV_PYTHON
 	bool "Python bindings"
+	select PACKAGE_python3-numpy
+	select PACKAGE_python3-numpy-src
 	default n
 	help
       Select this to add support for Python bindings
 
 config OPENCV_V4L
 	bool "V4L support"
+	select PACKAGE_libv4l
 	default n
 	help
       Select this to add support for V4L
 
 config OPENCV_TIFF
 	bool "TIFF support"
+	select PACKAGE_libtiff
 	default n
 	help
       Select this to add support for TIFF
 
 config OPENCV_PNG
 	bool "PNG support"
+	select PACKAGE_libpng
 	default n
 	help
       Select this to add support for PNG
 
 config OPENCV_GSTREAMER
 	bool "Gstreamer support"
+	select PACKAGE_gstreamer1
+	select PACKAGE_gstreamer1-libs
 	default n
 	help
       Select this to add support for Gstreamer
