@@ -1,5 +1,4 @@
 menu "Configuration"
-        depends on PACKAGE_opencv
 
 config OPENCV_FFMPEG
 	bool "FFmpeg support"
